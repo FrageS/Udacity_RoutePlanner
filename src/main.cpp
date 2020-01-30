@@ -29,7 +29,7 @@ static std::optional<std::vector<std::byte>> ReadFile(const std::string &path)
 
 void value_limiter(float &input)
 {    
-    if (input >= 0 && input <= 100) std::cout << "The value is set to: " << input << "\n"; 
+    if (input >= 0 && input <= 100) std::cout << "Starting point is set to: " << input << "\n"; 
     if (input < 0)
     {
         input = 0;
@@ -47,8 +47,7 @@ float user_input(std::string line)
     float input;
     std::cout << line << "\n";
     std::cin >> input;
-    value_limiter(input);
-    //std::cout << "The value is set to: " << input << "\n";
+    value_limiter(input);    
 
     return input;
 }
@@ -77,10 +76,7 @@ int main(int argc, const char **argv)
         else
             osm_data = std::move(*data);
     }
-    
-    // TODO 1: Declare floats `start_x`, `start_y`, `end_x`, and `end_y` and get
-    // user input for these values using std::cin. Pass the user input to the
-    // RoutePlanner object below in place of 10, 10, 90, 90.
+
     float start_x, start_y, end_x, end_y = 0;
     start_x = user_input("Enter starting X-Value");    
     start_y = user_input("Enter starting Y-value: "); 

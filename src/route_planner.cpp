@@ -26,7 +26,8 @@ void RoutePlanner::AddNeighbors(RouteModel::Node *current_node) {
         // Calculate H - Value (neighbor is node to calculate distance to end node)
         neighbor->h_value = CalculateHValue(neighbor);
         // Calculate g-value
-        neighbor->g_value = current_node->g_value + neighbor->distance(*current_node);
+        neighbor->g_value += current_node->g_value + neighbor->distance(*current_node);
+        // Set visited to true
         neighbor->visited = true;
         open_list.push_back(neighbor);
     }
@@ -34,6 +35,7 @@ void RoutePlanner::AddNeighbors(RouteModel::Node *current_node) {
 
 bool Compare(RouteModel::Node *a, RouteModel::Node *b)
 {
+    // From A* search lesson 3 Udacity course
     float f1 = a->g_value + a->h_value;
     float f2 = b->g_value + b->h_value;
     return f1>f2;
@@ -52,14 +54,16 @@ std::vector<RouteModel::Node> RoutePlanner::ConstructFinalPath(RouteModel::Node 
     distance = 0.0f;
     std::vector<RouteModel::Node> path_found;
     
-    while(current_node->parent)
+    while(current_node->parent != 0)
     {
-        distance += current_node->distance(*(current_node->parent));
+        distance = distance + current_node->distance(*(current_node->parent));
         path_found.push_back((*current_node));
+        //Set current node as parent node, this works until start node without parent is found
         current_node = current_node->parent;
     }
 
     path_found.push_back((*current_node));
+    // From en.cppreference.com/w/cpp/algorithm/reverse
     std::reverse(path_found.begin(), path_found.end());
     distance *= m_Model.MetricScale(); // Multiply the distance by the scale of the map to get meters.
     return path_found;
@@ -76,7 +80,7 @@ void RoutePlanner::AStarSearch() {
     {   
         //Get next node
         current_node = NextNode();
-        if(current_node->distance(*end_node) == 0)
+        if(current_node->x == end_node->x && current_node->y == end_node->y)
         {
             m_Model.path = ConstructFinalPath(current_node);
             return;
