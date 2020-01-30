@@ -27,6 +27,32 @@ static std::optional<std::vector<std::byte>> ReadFile(const std::string &path)
     return std::move(contents);
 }
 
+void value_limiter(float &input)
+{    
+    if (input >= 0 && input <= 100) std::cout << "The value is set to: " << input << "\n"; 
+    if (input < 0)
+    {
+        input = 0;
+        std::cout << "The entered point is out of scope and set to 0" << "\n";
+    }
+    if(input > 100)
+    {
+        input = 100;
+        std::cout << "The entered point is out of scope and set to 100" << "\n";
+    }
+    
+}
+float user_input(std::string line)
+{
+    float input;
+    std::cout << line << "\n";
+    std::cin >> input;
+    value_limiter(input);
+    //std::cout << "The value is set to: " << input << "\n";
+
+    return input;
+}
+
 int main(int argc, const char **argv)
 {    
     std::string osm_data_file = "";
@@ -55,50 +81,12 @@ int main(int argc, const char **argv)
     // TODO 1: Declare floats `start_x`, `start_y`, `end_x`, and `end_y` and get
     // user input for these values using std::cin. Pass the user input to the
     // RoutePlanner object below in place of 10, 10, 90, 90.
-    float start_x = 0;
-    float start_y = 0;
-    float end_x = 0;
-    float end_y = 0;
-    std::cout << "Enter starting X-value: ";
-    std::cin >> start_x;
-    if (start_x < 0)
-    {
-        start_x = 0;
-    }
-    if(start_x > 100)
-    {
-        start_x = 100;
-    }
-    std::cout << "Enter starting Y-value: ";
-    std::cin >> start_y;
-    if (start_y < 0)
-    {
-        start_y = 0;
-    }
-    if(start_y > 100)
-    {
-        start_y = 100;
-    }
-    std::cout << "Enter end X-value: ";
-    std::cin >> end_x;
-    if (end_x < 0)
-    {
-        end_x = 0;
-    }
-    if(end_x > 100)
-    {
-        end_x = 100;
-    }
-    std::cout << "Enter end Y-value: ";
-    std::cin >> end_y;
-    if (end_y < 0)
-    {
-        end_y = 0;
-    }
-    if(end_y > 100)
-    {
-        end_y = 100;
-    }
+    float start_x, start_y, end_x, end_y = 0;
+    start_x = user_input("Enter starting X-Value");    
+    start_y = user_input("Enter starting Y-value: "); 
+    end_x = user_input("Enter end X-value: ");     
+    end_y = user_input("Enter end Y-value: ");
+    
     // Build Model.
     RouteModel model{osm_data};
 
@@ -111,12 +99,12 @@ int main(int argc, const char **argv)
     // Render results of search.
     Render render{model};
 
-    //auto display = io2d::output_surface{400, 400, io2d::format::argb32, io2d::scaling::none, io2d::refresh_style::fixed, 30};
-    //display.size_change_callback([](io2d::output_surface& surface){
-    //    surface.dimensions(surface.display_dimensions());
-    //});
-    //display.draw_callback([&](io2d::output_surface& surface){
-    //    render.Display(surface);
-    //});
-    //display.begin_show();
+    auto display = io2d::output_surface{400, 400, io2d::format::argb32, io2d::scaling::none, io2d::refresh_style::fixed, 30};
+    display.size_change_callback([](io2d::output_surface& surface){
+        surface.dimensions(surface.display_dimensions());
+    });
+    display.draw_callback([&](io2d::output_surface& surface){
+        render.Display(surface);
+    });
+    display.begin_show();
 }

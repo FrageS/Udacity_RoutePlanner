@@ -156,8 +156,8 @@ thirdparty/pugixml/clean: thirdparty/pugixml/CMakeFiles/pugixml.dir/clean
 # Target rules for target CMakeFiles/test.dir
 
 # All Build rule for target.
-CMakeFiles/test.dir/all: thirdparty/googletest/googlemock/gtest/CMakeFiles/gtest_main.dir/all
 CMakeFiles/test.dir/all: thirdparty/pugixml/CMakeFiles/pugixml.dir/all
+CMakeFiles/test.dir/all: thirdparty/googletest/googlemock/gtest/CMakeFiles/gtest_main.dir/all
 CMakeFiles/test.dir/all: thirdparty/googletest/googlemock/gtest/CMakeFiles/gtest.dir/all
 	$(MAKE) -f CMakeFiles/test.dir/build.make CMakeFiles/test.dir/depend
 	$(MAKE) -f CMakeFiles/test.dir/build.make CMakeFiles/test.dir/build
